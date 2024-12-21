@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello World To-Do List</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .todo-container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .todo-input {
+      width: calc(100% - 50px);
+      padding: 10px;
+      font-size: 16px;
+    }
+
+    .add-btn {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #fff;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+  </style>
+ 
+</head>
+<body>
+  <h1>To-Do List</h1>
+  <div class="todo-container">
+    <input type="text" id="todoInput" class="todo-input" placeholder="Add a new task">
+    <button id="addBtn" class="add-btn">Add</button>
+    <ul id="todoList"></ul>
+  </div>
+
+  <script>
+
+    // Select elements
+    const todoInput = document.getElementById("todoInput");
+    const addBtn = document.getElementById("addBtn");
+    const todoList = document.getElementById("todoList");
+    
+    // Load tasks from LocalStorage
+    document.addEventListener("DOMContentLoaded", loadTasks);
+    
+    // Add task
+    addBtn.addEventListener("click", () => {
+      const task = todoInput.value.trim();
+      if (task) {
+        addTask(task);
+        saveTask(task);
+        todoInput.value = ""; // Clear input
+      }
+    });
+    
+    // Add task to the DOM
+    function addTask(task) {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <span>${task}</span>
+        <button class="delete-btn">Delete</button>
+      `;
+    
+      // Delete task
+      li.querySelector(".delete-btn").addEventListener("click", () => {
+        deleteTask(task);
+        li.remove();
+      });
+    
+      todoList.appendChild(li);
+    }
+    
+    // Save task to LocalStorage
+    function saveTask(task) {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.push(task);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+    
+    // Load tasks from LocalStorage
+    function loadTasks() {
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.forEach((task) => addTask(task));
+    }
+    
+    // Delete task from LocalStorage
+    function deleteTask(task) {
+      let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks = tasks.filter((t) => t !== task);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+
+  </script>
+</body>
+</html>
